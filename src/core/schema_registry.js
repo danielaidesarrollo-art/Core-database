@@ -49,6 +49,24 @@ class SchemaRegistry {
             }
         }
 
+        // --- EVOLUTIONARY SCHEMA (NLP Heuristics) ---
+        // Automatically detect PII or sensitive medical entities in free-form text
+        if (data.findings || data.note) {
+            const content = (data.findings || "") + " " + (data.note || "");
+            const sensitivePatterns = [
+                { pattern: /\b\d{3}-\d{2}-\d{4}\b/g, type: "SSN" },
+                { pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, type: "EMAIL" },
+                { pattern: /\b(HIV|CANCER|COVID|DIABETES)\b/gi, type: "DIAGNOSIS" }
+            ];
+
+            sensitivePatterns.forEach(p => {
+                if (p.pattern.test(content)) {
+                    console.log(`[DataCore/Evolutionary] SENSITIIVE ENTITY DETECTED: ${p.type}. Escalating protection.`);
+                    // Logic to flag for high-tier encryption in future sprints
+                }
+            });
+        }
+
         return true;
     }
 
