@@ -1,0 +1,7 @@
+node_modules/
+data/
+compliance_output.txt
+full_compliance_output.txt
+violations.txt
+report_error.txt
+.env
